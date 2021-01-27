@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqy.third.CourseDao">
+
+    <!--嵌套查询-->
+    <resultMap id="courseMap1" type="course">
+        <id column="c_id" property="c_id"></id>
+        <result column="c_name" property="c_name"></result>
+        <collection property="stuList" javaType="list" ofType="student" column="c_id" select="com.cqy.third.StudentDao.findByCid"></collection>
+    </resultMap>
+    <!--嵌套结果查询-->
+    <resultMap id="courseMap" type="course">
+        <id column="c_id" property="id"></id>
+        <result column="c_name" property="name"></result>
+        <collection property="stuList" javaType="list" ofType="student" >
+            <id column="s_id" property="s_id"></id>
+            <result column="s_name" property="s_name"></result>
+        </collection>
+    </resultMap>
+    <!--嵌套结果查询-->
+    <select id="findByCid" parameterType="int" resultMap="courseMap">
+        select c.*,s.* from t_course c
+        inner join t_relation tr
+        on c.c_id=tr.cid
+        inner join t_student s
+        on tr.sid=s.s_id
+        where c.c_id=#{cid}
+    </select>
+    <!--嵌套查询-->
+    <select id="findByCid1" parameterType="int" resultMap="courseMap1">
+        select * from t_course where c_id=#{cid}
+    </select>
+</mapper>

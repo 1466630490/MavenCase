@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employeeDao">
+    <select id="findAll" resultType="employee">
+        select * from employee
+    </select>
+    <insert id="add" parameterType="employee">
+        insert into employee (name,age,sex,phone) values (#{name},#{age},#{sex},#{phone})
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
+            select  last_insert_id()
+        </selectKey>
+    </insert>
+    <insert id="add2" parameterType="employee">
+        insert into employee(
+        <trim suffixOverrides=",">
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="age!=null">
+                age,
+            </if>
+            <if test="sex!=null">
+                sex,
+            </if>
+            <if test="phone!=null">
+                phone
+            </if>
+        </trim>
+        ) values (
+        <trim suffixOverrides=",">
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="age!=null">
+                #{age},
+            </if>
+            <if test="sex!=null">
+                #{sex},
+            </if>
+            <if test="phone!=null">
+                #{phone}
+            </if>
+        </trim>
+        )
+    </insert>
+    <update id="update" parameterType="employee">
+        update employee
+        <set>
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="age!=null">
+                age,
+            </if>
+            <if test="sex!=null">
+                sex,
+            </if>
+            <if test="phone!=null">
+                phone
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
